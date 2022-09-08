@@ -10,6 +10,17 @@
       "StackName": "amplify-myyelp-dev-195336",
       "StackId": "arn:aws:cloudformation:us-east-1:620179071580:stack/amplify-myyelp-dev-195336/b180bb20-2df3-11ed-9137-0a4b53e0113d",
       "AmplifyAppId": "d2qtko938fzn8i"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d2qtko938fzn8i",
+          "type": "cicd"
+        }
+      },
+      "auth": {
+        "myyelp84958ba5": {}
+      }
     }
   }
 }

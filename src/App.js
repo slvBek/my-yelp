@@ -1,12 +1,44 @@
 import './App.css';
-import { createRestaurant, deleteRestaurant} from './graphql/mutations'
+// import { createRestaurant, deleteRestaurant} from './graphql/mutations'
 import { listRestaurants } from './graphql/queries'
-import { withAuthenticator, Button, Text, Flex, Heading } from "@aws-amplify/ui-react";
+import { withAuthenticator, Button, Flex, Heading } from "@aws-amplify/ui-react";
 import { useCallback, useEffect, useState } from 'react';
 import { API } from 'aws-amplify';
+import React from 'react';
+import View from "./components/View"
 
 function App({ signOut }) {
-  const [ notes, setNotes ] = useState([])
+  const getDatafromLS=()=>{
+    const data = localStorage.getItem('restaurants');
+    if(data){
+      return JSON.parse(data);
+    }
+    else{
+      return []
+    }
+  }
+
+  const [restaurants, setRestaurants] = useState(getDatafromLS());
+  const [ setNotes ] = useState([])
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
+  const [city, setCity] = useState('')
+  const handleAddRestaurantSubmit=(e)=>{
+    e.preventDefault();
+    let restaurant={
+      name,
+      description,
+      city
+    }
+    setRestaurants([...restaurants, restaurant]);
+    setName('');
+    setDescription('');
+    setCity('');
+  }
+
+  useEffect(()=>{
+    localStorage.setItem('restaurants',JSON.stringify(restaurants));
+  },[restaurants])
 
   const fetchNotes = useCallback(async () => {
     const result = await API.graphql({
@@ -16,40 +48,60 @@ function App({ signOut }) {
     setNotes(result.data.listRestaurants.items)
   }, [setNotes])
 
-  const handlecreateRestaurant = useCallback(async () => {
-    await API.graphql({
-      query: createRestaurant,
-      variables: { input: { text: window.prompt("New restourant") } },
-      authMode: 'AMAZON_COGNITO_USER_POOLS'
-    })
-    fetchNotes()
-  }, [fetchNotes])
-
-  const handledeleteRestaurant = useCallback(async (id) => {
-    await API.graphql({
-      query: deleteRestaurant,
-      variables: { input: { id: id } },
-      authMode: 'AMAZON_COGNITO_USER_POOLS'
-    })
-    fetchNotes()
-  }, [fetchNotes])
-
   useEffect(() => {
     fetchNotes()
   }, [fetchNotes])
 
   return (
+    <>
     <Flex direction={"column"}>
       <Flex justifyContent={'space-between'}>
-        <Heading level={1}>My notes</Heading>
+        <Heading level={1}>My yelp</Heading>
         <Button onClick={signOut}>Sign Out</Button>
       </Flex>
-      {notes.map(note => <Flex alignItems={'center'}>
-        <Text>{note.text}</Text>
-        <Button onClick={() => handledeleteRestaurant(note.id)}>Remove</Button>
-      </Flex>)}
-      <Button onClick={handlecreateRestaurant}>Add Note</Button>
     </Flex>
+    <div className='wrapper'>
+      <div className='main'>
+            <div className='form-container'>
+                <form autoComplete="off" className='form-group'
+                onSubmit={handleAddRestaurantSubmit}>
+                  <label>Name</label>
+                  <input type="text" placeholder='name' className='form-control' required
+                  onChange={(e)=>setName(e.target.value)} value={name}></input>
+                  <br></br>
+                  <label>Description</label>
+                  <input type="text" placeholder='description' className='form-control' required
+                  onChange={(e)=>setDescription(e.target.value)} value={description}></input>
+                  <br></br>
+                  <label>City</label>
+                  <input type="text" placeholder='city' className='form-control' required
+                  onChange={(e)=>setCity(e.target.value)} value={city}></input>
+                  <br></br>
+                  <button type="submit" className='btn btn-success btn-md'>Add New Restaurant</button>
+                </form>
+            </div>
+            <div className='view-container'>
+                {restaurants.length>0&&<>
+                  <div className='table-responsive'>
+                    <table className='table'>
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Description</th>
+                          <th>City</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <View restaurants={restaurants}/>
+                      </tbody>
+                    </table>
+                  </div>
+                </>}
+                {restaurants.length < 1 && <div>No information are added yet</div>}
+            </div>
+        </div>
+    </div>
+    </>
   );
 }
 
