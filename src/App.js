@@ -1,5 +1,4 @@
 import './App.css';
-// import { createRestaurant, deleteRestaurant} from './graphql/mutations'
 import { listRestaurants } from './graphql/queries'
 import { withAuthenticator, Button, Flex, Heading } from "@aws-amplify/ui-react";
 import { useCallback, useEffect, useState } from 'react';
@@ -54,10 +53,13 @@ function App({ signOut }) {
 
   return (
     <>
+    <div class="bg-img">
     <Flex direction={"column"}>
       <Flex justifyContent={'space-between'}>
-        <Heading level={1}>My yelp</Heading>
-        <Button onClick={signOut}>Sign Out</Button>
+        <nav class="navbar navbar-dark bg-dark">
+        <Heading style={{ color: 'white', marginLeft: "25px" }}level={1}>My Yelp</Heading>
+        <Button class="btn btn-primary" onClick={signOut}>Sign Out</Button>
+    </nav>
       </Flex>
     </Flex>
     <div className='wrapper'>
@@ -101,7 +103,9 @@ function App({ signOut }) {
             </div>
         </div>
     </div>
+    </div>
     </>
+    
   );
 }
 

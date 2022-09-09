@@ -40,10 +40,11 @@ code {
 }
 
 .wrapper .form-container{
+  z-index: 1;
   width: 500px;
   height: 340px;
   background-color: #e4e4e4;
-  margin: 20px auto;
+  margin: 150px auto;
   padding: 20px;
 }
 
@@ -52,6 +53,7 @@ code {
 }
 
 .wrapper .view-container{
+  z-index: 1;
   width: 600px;
   background-color: #e4e4e4;
   margin: 20px auto;
@@ -67,4 +69,32 @@ code {
 
 tbody{
   margin-top: 25px;
+}
+.bg-dark {
+  width: 100%;
+}
+
+
+html,
+.bg-img {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: url("http://unsplash.it/1200x800") center center no-repeat;
+  background-size: cover;
+}
+
+.bg-img:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: linear-gradient(to bottom right, #002f4b, #dc4225);
+  opacity: 0.6;
+}
+
+.btn-primary {
+  margin-right: 20px;
 }
