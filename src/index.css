@@ -97,4 +97,5 @@ html,
 
 .btn-primary {
   margin-right: 20px;
+  z-index: 1;
 }
